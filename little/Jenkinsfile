@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials-id')
+        DOCKER_IMAGE_NAME = 'santoshbd67/webapp'
+        DOCKER_IMAGE_TAG = 'v123'
+    }
+
+    stages {
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    def customImage = docker.build("${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}", '-f Dockerfile .')
+                }
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials-id') {
+                        def customImage = docker.image("${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}")
+                        customImage.push()
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            // Clean up: Remove the Docker image
+            script {
+                docker.image("${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}").remove()
+            }
+        }
+    }
+}
