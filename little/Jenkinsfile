@@ -5,7 +5,7 @@ pipeline {
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials-id')
         DOCKER_IMAGE_NAME = 'santoshbd67/webapp'
         DOCKER_IMAGE_TAG = 'v123'
-        GITHUB_REPO_URL = 'https://github.com/santoshbd67/my-project.git'
+        GITHUB_REPO_URL = 'https://github.com/santoshbd67/my-project/blob/master/little/Jenkinsfile'
     }
 
     stages {
